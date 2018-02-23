@@ -1,0 +1,477 @@
+---
+title: Asuransi Ramayana Tbk Treaty Paid Claims 2014-17
+author: AAHE
+date: '2018-02-22'
+slug: asuransi-ramayana-tbk-treaty-2014-17-paid-claims-development
+categories: []
+tags: []
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Paid Claims Analysis in R
+
+### Preamble
+
+R is a language and environment for statistical computing and graphics. R provides a wide variety of statistical (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and graphical techniques, and is highly extensible. R is available as Free Software under the terms of the Free Software Foundation’s GNU General Public License in source code form. For more details, please see <https://www.r-project.org/>.
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown, please see <http://rmarkdown.rstudio.com>.
+
+
+```{r,echo=F,warning=FALSE, error=FALSE, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(knitr)
+library(kableExtra)
+options(knitr.table.format="html")
+```
+
+### Declared Paid Losses
+This table shows the amount of Paid Losses by Date of Loss as declared in various Claims Bordereaux since the inception of the contract in September 2014.
+
+```{r,echo=FALSE, warning=FALSE}
+Ramayana_Claim_List_updated_14_Dec_2017_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana Claim List updated 14 Dec 2017 (AAHE).xlsx", 
+                                                            sheet = "Sheet1")
+ROE <- c(13375,1,10073,16278)
+claims1217 <- as.tibble(Ramayana_Claim_List_updated_14_Dec_2017_AAHE_)
+claims1217$Total__2 <- as.numeric(claims1217$Total__2)
+claims1217 <- claims1217%>%
+  arrange(desc(Total))%>%
+  select(`Date of Loss`,`Claim No.`,Assured,Total,Total__1,Total__2)%>%
+  dplyr::rename(DOL=`Date of Loss`,Claim=`Claim No.`, IDR=`Total`,USD=`Total__1`,SGD=`Total__2`)
+PaidIDR <- claims1217%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Claim,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD <- claims1217%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Claim,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+PaidSGD <- claims1217%>%
+  arrange(desc(SGD))%>%
+  filter(SGD!=0)%>%
+  select(DOL,Claim,Assured, SGD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(SGD))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[3]), CURR="SGD")
+Paid <- rbind(PaidIDR,PaidUSD,PaidSGD)
+Paid1217 <- Paid%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2017-12-14"=round(sum(EQU)))
+Paid1217$DOL <- as.Date(Paid1217$DOL)
+
+Ramayana_Claim_List_Reconciliation_18092017 <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana Claim List Reconciliation 18092017 (AAHE).xlsx", 
+                                                          sheet = "Sheet2")
+claims0917 <- as.tibble(Ramayana_Claim_List_Reconciliation_18092017)
+claims0917 <- claims0917%>%
+  arrange(desc(paid))%>%
+  select(DOL,`The Insured`,paid,'X__3')%>%
+  dplyr::rename(Assured=`The Insured`,IDR=paid,USD='X__3')
+claims0917$DOL <- dmy(claims0917$DOL)
+claims0917$IDR <- as.numeric(claims0917$IDR)
+PaidIDR0917 <- claims0917%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD0917 <- claims0917%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid0917 <- rbind(PaidIDR0917,PaidUSD0917)
+Paid0917 <- Paid0917%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2017-09-18"=sum(EQU))
+
+Ramayana_PLA_DLA_updated_of_05_Dec_2016_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana PLA & DLA updated of 05 Dec 2016 (AAHE).xlsx", 
+                                                            sheet = "Sheet1")
+claims1216 <- as.tibble(Ramayana_PLA_DLA_updated_of_05_Dec_2016_AAHE_)
+claims1216 <- claims1216%>%
+  arrange(desc(paid))%>%
+  select(DOL,X__4,paid,X__9)%>%
+  dplyr::rename(Assured=X__4,IDR=paid,USD=X__9)%>%
+  filter(IDR!="Nil")
+claims1216$IDR <- as.numeric(claims1216$IDR)
+PaidIDR1216 <- claims1216%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD1216 <- claims1216%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid1216 <- rbind(PaidIDR1216,PaidUSD1216)
+Paid1216 <- Paid1216%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2016-12-05"=sum(EQU))
+Paid1216$DOL <- as.Date(Paid1216$DOL)
+
+Ramayana_PLA_DLA_updated_of_12_Aug_2016_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana PLA & DLA updated of 12 Aug 2016 (AAHE).xlsx", 
+                                                            sheet = "Sheet1")
+claims0816 <- as.tibble(Ramayana_PLA_DLA_updated_of_12_Aug_2016_AAHE_)
+claims0816 <- claims0816%>%
+  arrange(desc(paid))%>%
+  select(DOL,Assured,paid,X__11)%>%
+  dplyr::rename(IDR=paid,USD=X__11)%>%
+  filter(IDR!="Nil")
+claims0816$IDR <- as.numeric(claims0816$IDR)
+PaidIDR0816 <- claims0816%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD0816 <- claims0816%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid0816 <- rbind(PaidIDR0816,PaidUSD0816)
+Paid0816 <- Paid0816%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2016-08-12"=sum(EQU))
+Paid0816$DOL <- as.Date(Paid0816$DOL)
+
+Ramayana_PLA_DLA_updated_of_18_May_2016_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana PLA & DLA updated of 18 May 2016 (AAHE).xlsx", 
+                                                            sheet = "Sheet1")
+claims0516 <- as.tibble(Ramayana_PLA_DLA_updated_of_18_May_2016_AAHE_)
+claims0516 <- claims0516%>%
+  arrange(desc(paid))%>%
+  select(DOL,Assured,paid,X__12)%>%
+  dplyr::rename(IDR=paid,USD=X__12)%>%
+  filter(IDR!="Nil")
+claims0516$IDR <- as.numeric(claims0516$IDR)
+claims0516$DOL <- dmy(claims0516$DOL)
+PaidIDR0516 <- claims0516%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD0516 <- claims0516%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid0516 <- rbind(PaidIDR0516,PaidUSD0516)
+Paid0516 <- Paid0516%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2016-05-18"=sum(EQU))
+Paid0516$DOL <- as.Date(Paid0516$DOL)
+
+Claim_Lists_Ramayana_updated_010416_AAHE_a <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Claim Lists Ramayana - updated 010416 (AAHE)a.xlsx", 
+                                                         sheet = "Sheet2")
+claims0416 <- as.tibble(Claim_Lists_Ramayana_updated_010416_AAHE_a)
+claims0416 <- claims0416%>%
+  arrange(desc(paid))%>%
+  select(DOL,Assured,paid,USD)%>%
+  dplyr::rename(IDR=paid)
+claims0416$IDR <- as.numeric(claims0416$IDR)
+PaidIDR0416 <- claims0416%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD0416 <- claims0416%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid0416 <- rbind(PaidIDR0416,PaidUSD0416)
+Paid0416 <- Paid0416%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2016-04-01"=sum(EQU))
+Paid0416$DOL <- as.Date(Paid0416$DOL)
+
+Claim_Lists_Ramayana_AAHE_updated_220216_AAHE_a <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Claim Lists Ramayana - AAHE updated 220216 (AAHE)a.xlsx", 
+                                                              sheet = "Sheet2")
+claims0216 <- as.tibble(Claim_Lists_Ramayana_AAHE_updated_220216_AAHE_a)
+claims0216 <- claims0216%>%
+  arrange(desc(paid))%>%
+  select(DOL,Assured,paid,USD)%>%
+  dplyr::rename(IDR=paid)
+claims0216$IDR <- as.numeric(claims0216$IDR)
+PaidIDR0216 <- claims0216%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD0216 <- claims0216%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid0216 <- rbind(PaidIDR0216,PaidUSD0216)
+Paid0216 <- Paid0216%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2016-02-22"=sum(EQU))
+Paid0216$DOL <- as.Date(Paid0216$DOL)
+
+Claim_Ramayana_2017_updated_210617_revised_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Claim Ramayana 2017 - updated 210617 (revised) (AAHE).xlsx", 
+  sheet = "Sheet1", col_types = c("numeric", 
+  "text", "text", "text", "date", "date", 
+  "date", "date", "text", "text", "text", 
+  "text", "text", "numeric", "text", 
+  "numeric", "text", "numeric", "text", 
+  "numeric", "numeric", "numeric", 
+  "text", "text", "numeric", "text", 
+  "numeric", "text", "numeric", "text", 
+  "numeric", "text", "numeric", "text", 
+  "numeric", "numeric", "numeric", 
+  "text", "text", "text", "text", "numeric", 
+  "text", "numeric", "text", "numeric", 
+  "text", "text", "text", "text", "text", 
+  "numeric", "text", "numeric", "text"))
+claims0617 <- as.tibble(Claim_Ramayana_2017_updated_210617_revised_AAHE_)
+claims0617 <- claims0617%>%
+  arrange(desc(paid))%>%
+  select(DOL,Assured,paid,USD)%>%
+  dplyr::rename(IDR=paid)
+claims0617$IDR <- as.numeric(claims0617$IDR)
+PaidIDR0617 <- claims0617%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD0617 <- claims0617%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+Paid0617 <- rbind(PaidIDR0617,PaidUSD0617)
+Paid0617 <- Paid0617%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2017-06-21"=sum(EQU))
+Paid0617$DOL <- as.Date(Paid0617$DOL)
+
+Ramayana_Claim_List_updated_09_Jan_2018_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana Claim List updated 09 Jan 2018 (AAHE).xlsx", 
+  sheet = "Sheet1", col_types = c("numeric", 
+  "text", "text", "text", "numeric", 
+  "date", "text", "text", "text", "text", 
+  "text", "numeric", "text", "numeric", 
+  "text", "numeric", "text", "numeric", 
+  "numeric", "date", "text", "text", 
+  "text", "text", "numeric", "text", 
+  "numeric", "text", "numeric", "text", 
+  "numeric", "text", "numeric", "numeric", 
+  "numeric", "text", "text", "text", 
+  "text", "text", "text", "text", "text", 
+  "text", "text", "text", "text", "text", 
+  "text", "text", "text", "numeric", 
+  "text", "numeric", "text", "text", 
+  "text"))
+
+claims0118 <- as.tibble(Ramayana_Claim_List_updated_09_Jan_2018_AAHE_)
+claims0118 <- claims0118%>%
+  arrange(desc(IDR))%>%
+  select(DOL,Assured,IDR,USD,SGD)
+claims0118$SGD <- as.numeric(claims0118$SGD)
+PaidIDR <- claims0118%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD <- claims0118%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+PaidSGD <- claims0118%>%
+  arrange(desc(SGD))%>%
+  filter(SGD!=0)%>%
+  select(DOL,Assured, SGD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(SGD))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[3]), CURR="SGD")
+Paid <- rbind(PaidIDR,PaidUSD,PaidSGD)
+Paid0118 <- Paid%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2018-01-09"=round(sum(EQU)))
+Paid0118$DOL <- as.Date(Paid0118$DOL)
+
+Ramayana_Claim_List_updated_15_Feb_2018_AAHE_ <- read_excel("D:/Users/user/Dropbox/AIH Underwriting/Hannover Re/Ramayana/Claims/Ramayana Claim List updated 15 Feb 2018 (AAHE).xlsx", 
+                                                            sheet = "Sheet1", col_types = c("numeric", 
+                                                            "text", "text", "text", "date", "date", 
+                                                            "text", "text", "text", "text", "text", 
+                                                            "numeric", "text", "numeric", "text", 
+                                                            "numeric", "text", "numeric", "date", 
+                                                            "date", "text", "text", "text", "text", 
+                                                            "numeric", "text", "numeric", "text", 
+                                                            "numeric", "text", "numeric", "text", 
+                                                            "numeric", "date", "date", "text", 
+                                                            "text", "text", "text", "text", "text", 
+                                                            "text", "text", "text", "text", "text", 
+                                                            "text", "text", "text", "text", "text", 
+                                                            "numeric", "text", "numeric", "text", 
+                                                            "text", "text"))
+claims0218 <- as.tibble(Ramayana_Claim_List_updated_15_Feb_2018_AAHE_)
+claims0218 <- claims0218%>%
+  arrange(desc(IDR))%>%
+  select(DOL,Assured,IDR,USD,SGD)
+claims0218$SGD <- as.numeric(claims0218$SGD)
+PaidIDR <- claims0218%>%
+  arrange(desc(IDR))%>%
+  filter(IDR!=0)%>%
+  select(DOL,Assured, IDR)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(IDR))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid",EQU=round(Paid*ROE[2]), CURR="IDR")
+PaidUSD <- claims0218%>%
+  arrange(desc(USD))%>%
+  filter(USD!=0)%>%
+  select(DOL,Assured, USD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(USD))%>%
+  arrange(desc(Paid))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[1]), CURR="USD")
+PaidSGD <- claims0218%>%
+  arrange(desc(SGD))%>%
+  filter(SGD!=0)%>%
+  select(DOL,Assured, SGD)%>%
+  group_by(DOL)%>%
+  dplyr::summarise(Paid=sum(SGD))%>%
+  mutate(Status="Paid", EQU=round(Paid*ROE[3]), CURR="SGD")
+Paid <- rbind(PaidIDR,PaidUSD,PaidSGD)
+Paid0218 <- Paid%>%
+  select(DOL,EQU)%>%
+  group_by(DOL)%>%
+  dplyr::summarise("2018-02-15"=round(sum(EQU)))
+Paid0218$DOL <- as.Date(Paid0218$DOL)
+
+compare <- Paid0216%>%
+  merge(Paid0416,by="DOL",all=T)%>%
+  merge(Paid0516,by="DOL",all=T)%>%
+  merge(Paid0816,by="DOL",all=T)%>%
+  merge(Paid1216,by="DOL",all=T)%>%
+  merge(Paid0617,by="DOL",all=T)%>%
+  merge(Paid0917,by="DOL",all=T)%>%
+  merge(Paid1217,by="DOL",all=T)%>%
+  merge(Paid0118,by="DOL",all=T)%>%
+  merge(Paid0218,by="DOL",all=T)%>%
+  replace(is.na(.), 0)
+       compare%>%kable("html", escape = F)%>%
+              kable_styling(bootstrap_options = c("striped","hover","condensed"), font_size = 10, full_width = F, position = "center") %>%
+    add_header_above(c(" "=1,"Claims Bordereaux Date"=10))
+```
+
+This table shows the Aggregate Paid Losses  as declared in various Claims Bordereaux since the inception of the contract in September 2014.
+
+
+```{r,echo=FALSE, warning=FALSE}    
+agglosses <- compare[,-1]
+agglosses <- t(colSums(agglosses))
+    agglosses%>%kable("html", escape = F)%>%
+              kable_styling(bootstrap_options = c("striped","hover","condensed"), font_size = 10, full_width = F, position = "center") %>%
+       add_header_above(c("Claims Bordereaux Date"=10))
+```
+
+This table shows the development of Paid Losses by Date of Loss as declared in various Claims Bordereaux since the inception of the contract in September 2014.
+
+```{r,echo=FALSE, warning=FALSE}
+difference <- compare%>%
+  transmute(DOL=DOL,
+            change=round(`2016-04-01`)-round(`2016-02-22`),
+            change1=round(`2016-05-18`)-round(`2016-04-01`),
+            change2=round(`2016-08-12`)-round(`2016-05-18`),
+            change3=round(`2016-12-05`)-round(`2016-08-12`),
+            change4=round(`2017-06-21`)-round(`2016-12-05`),
+            change5=round(`2017-09-18`)-round(`2017-06-21`),
+            change6=round(`2017-12-14`)-round(`2017-09-18`),
+            change7=round(`2018-01-09`)-round(`2017-12-14`),
+            change8=round(`2018-02-15`)-round(`2018-01-09`),
+            cumulative=round(`2018-02-15`)-round(`2016-02-22`))%>%
+  arrange(DOL)
+  difference%>%kable("html")%>%
+    kable_styling(bootstrap_options = c("striped","hover","condensed"), font_size = 10, full_width = F, position = "center") %>%
+       add_header_above(c(" "=1,"Movement in Paid Amount since Prior Bordereau"=9," "=1))
+
+
+```
+
+### Disclaimer
+
+The results in this report are strictly private and confidential. 
+
+This analysis depends on data and inputs supplied by others, and any gaps, inaccuracies, or changes to the inputs can substantially affect the output. 
+
+There are no guarantees about the reliability, accuracy or completeness of this analysis and Huntington Underwriting Limited assumes no liability or responsibility for the content of this report whatsoever.
+
+```{r, echo=FALSE}
+
+```
+_________________________________________________________________________________________
+##### **HUNTINGTON UNDERWRITING LIMITED**				       <http://www.huntingtonunderwriting.com>  
+Brighton Place, Ground Floor, U0215, Jalan Bahasa, PO Box 80431, 87014 Labuan FT, Malaysia   Tel: +60 87 442899  
+A Licensed Labuan Underwriting Manager under the Labuan Financial Services & Securities Act 2010 (# US201226)
+
+
+ 
+

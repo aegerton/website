@@ -1,0 +1,282 @@
+---
+title: Seen Sam Shipping First Loss 2018-21
+author: ''
+date: '2018-01-23'
+slug: seen-sam-shipping-first-loss-2018-21
+categories: []
+tags: []
+---
+
+
+
+<div id="monte-carlo-simulation-in-r" class="section level2">
+<h2>Monte Carlo Simulation in R</h2>
+<div id="preamble" class="section level3">
+<h3>Preamble</h3>
+<p>R is a language and environment for statistical computing and graphics. R provides a wide variety of statistical (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and graphical techniques, and is highly extensible. R is available as Free Software under the terms of the Free Software Foundation’s GNU General Public License in source code form. For more details, please see <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>.</p>
+<p>This analysis makes use of the R package fitdistrplus that provides functions for fitting univariate distributions to different types of data (continuous censored or non-censored data and discrete data) and allowing different estimation methods (maximum likelihood, moment matching, quantile matching and maximum goodness-of-fit estimation). For more details, please see <a href="http://www.jstatsoft.org/v64/i04/" class="uri">http://www.jstatsoft.org/v64/i04/</a>.</p>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown, please see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+</div>
+<div id="deal-structure" class="section level3">
+<h3>Deal Structure</h3>
+<pre class="r"><code>L &lt;- c(0e6, 25e6, 150e6, 250e6)
+GNPI &lt;- c(6e9, 6.5e9, 7e9)
+r &lt;- c(0.008333, 0.3)
+P &lt;- c(GNPI * r[1])
+B &lt;- c(0)
+HUL &lt;- c(0.1, 0.2)
+lambda &lt;- c(25 / 4, 0)
+ROE &lt;- 50</code></pre>
+</div>
+<div id="loss-severity-distribution-fit" class="section level3">
+<h3>Loss Severity Distribution Fit</h3>
+<pre><code>## Fitting of the distribution &#39; lnorm &#39; by maximum likelihood 
+## Parameters : 
+##          estimate Std. Error
+## meanlog 14.001704  0.5366042
+## sdlog    2.683021  0.3794362
+## Loglikelihood:  -410.1897   AIC:  824.3793   BIC:  826.8171 
+## Correlation matrix:
+##         meanlog sdlog
+## meanlog       1     0
+## sdlog         0     1</code></pre>
+</div>
+<div id="output" class="section level3">
+<h3>Output</h3>
+<table class="table table-striped table-hover table-condensed" style="font-size: 14px; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+total.premium
+</th>
+<th style="text-align:left;">
+total.loss
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Min. :3249870
+</td>
+<td style="text-align:left;">
+Min. : 14151
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1st Qu.:3249870
+</td>
+<td style="text-align:left;">
+1st Qu.:1646885
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Median :3249870
+</td>
+<td style="text-align:left;">
+Median :2262179
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Mean :3249870
+</td>
+<td style="text-align:left;">
+Mean :2333141
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3rd Qu.:3249870
+</td>
+<td style="text-align:left;">
+3rd Qu.:2926013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Max. :3249870
+</td>
+<td style="text-align:left;">
+Max. :5000000
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-hover table-condensed" style="font-size: 14px; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+df
+</th>
+<th style="text-align:right;">
+USD
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Average NPV
+</td>
+<td style="text-align:right;">
+352354.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Avg NPV / ERD
+</td>
+<td style="text-align:right;">
+3.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Maximum NPV
+</td>
+<td style="text-align:right;">
+701972.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Average NPV in Profit Cases
+</td>
+<td style="text-align:right;">
+584741.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Minimum NPV
+</td>
+<td style="text-align:right;">
+-1847626.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Probability of Loss
+</td>
+<td style="text-align:right;">
+0.19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Average Loss in Loss Cases
+</td>
+<td style="text-align:right;">
+-616846.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Avg Loss in Loss Cases / Avg Prem
+</td>
+<td style="text-align:right;">
+0.19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ERD / Avg Prem
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+99th Percentile Loss
+</td>
+<td style="text-align:right;">
+-1720498.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+99th Percentile Leverage
+</td>
+<td style="text-align:right;">
+4.88
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ARC
+</td>
+<td style="text-align:right;">
+701573.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Spread on Face Capital
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total Return on ARC
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Avg Life of ARC (estimated)
+</td>
+<td style="text-align:right;">
+2.50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Annual Return on ARC
+</td>
+<td style="text-align:right;">
+0.18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="npv-plots" class="section level3">
+<h3>NPV Plots</h3>
+<p><img src="/post/2018-01-23-seen-sam-shipping-first-loss-2018-21_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="disclaimer" class="section level3">
+<h3>Disclaimer</h3>
+<p>The results in this report are strictly private and confidential.</p>
+<p>Developing models to estimate losses is an inherently subjective and imprecise process, involving judgment about a variety of environmental, demographic and regulatory factors. Alternative assumptions and methodologies could yield materially different results. Also, the output of the models depends on data and inputs supplied by others, and any gaps, inaccuracies, or changes to the inputs can substantially affect the output.</p>
+<p>The model output in this report consists of estimates, not predictions. Actual experience may differ materially. There are no guarantees about the reliability, accuracy or completeness of the model output and Huntington Underwriting Limited assumes no liability or responsibility for the content of this report whatsoever.</p>
+<hr />
+<div id="huntington-underwriting-limited-httpwww.huntingtonunderwriting.com" class="section level5">
+<h5><strong>HUNTINGTON UNDERWRITING LIMITED</strong> <a href="http://www.huntingtonunderwriting.com" class="uri">http://www.huntingtonunderwriting.com</a></h5>
+<p>Brighton Place, Ground Floor, U0215, Jalan Bahasa, PO Box 80431, 87014 Labuan FT, Malaysia<br />
+Tel: +60 87 442899<br />
+A Licensed Labuan Underwriting Manager under the Labuan Financial Services &amp; Securities Act 2010 (# US201226)</p>
+</div>
+</div>
+</div>

@@ -1,0 +1,75 @@
+---
+title: Pacific Insurance Company Structured XOL 2018-20
+author: AAHE
+date: '2017-12-12'
+slug: pacific-insurance-company-structured-xol-2018-20
+categories: []
+tags: []
+---
+
+
+
+<div id="monte-carlo-simulation-in-r" class="section level2">
+<h2>Monte Carlo Simulation in R</h2>
+<div id="preamble" class="section level3">
+<h3>Preamble</h3>
+<p>R is a language and environment for statistical computing and graphics. R provides a wide variety of statistical (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and graphical techniques, and is highly extensible. R is available as Free Software under the terms of the Free Software Foundation’s GNU General Public License in source code form. For more details, please see <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>.</p>
+<p>This analysis makes use of the R package fitdistrplus that provides functions for fitting univariate distributions to different types of data (continuous censored or non-censored data and discrete data) and allowing different estimation methods (maximum likelihood, moment matching, quantile matching and maximum goodness-of-fit estimation). For more details, please see <a href="http://www.jstatsoft.org/v64/i04/" class="uri">http://www.jstatsoft.org/v64/i04/</a>.</p>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown, please see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+</div>
+<div id="deal-structure" class="section level3">
+<h3>Deal Structure</h3>
+<pre class="r"><code>L &lt;- c(2.5e6,2.5e6,7.5e6,17.5e6)
+GNPI &lt;- c(65e6,70e6,75e6)
+r &lt;- c(0.01466,0.5)
+P &lt;- c(GNPI*r[1])
+B &lt;- c(0.15)
+HUL &lt;- c(0.1,0.2)
+ln &lt;- c(14.866,0.563)
+lambda &lt;- c(1,0)
+ROE &lt;- 4.1180</code></pre>
+</div>
+<div id="simulation-output" class="section level3">
+<h3>Simulation Output</h3>
+<pre><code>##  total.premium        agg.loss            NPV          
+##  Min.   : 747596   Min.   :      0   Min.   :-1268961  
+##  1st Qu.: 796989   1st Qu.: 120993   1st Qu.:   98269  
+##  Median : 978995   Median : 571762   Median :  224279  
+##  Mean   : 993487   Mean   : 599080   Mean   :  124671  
+##  3rd Qu.:1121449   3rd Qu.: 904725   3rd Qu.:  224279  
+##  Max.   :2044026   Max.   :3195569   Max.   :  224279</code></pre>
+<pre><code>##                                   df         USD
+## 1                        Average NPV   124671.00
+## 2                      Avg NPV / ERD        3.13
+## 3                        Maximum NPV   224279.00
+## 4        Average NPV in Profit Cases   198468.00
+## 5                        Minimum NPV -1268961.00
+## 6                Probability of Loss        0.18
+## 7         Average Loss in Loss Cases  -221312.00
+## 8  Avg Loss in Loss Cases / Avg Prem        0.22
+## 9                     ERD / Avg Prem        0.04
+## 10              99th Percentile Loss  -630930.00
+## 11          99th Percentile Leverage        5.06
+## 12                               ARC   275150.00
+## 13            Spread on Face Capital        0.01
+## 14               Total Return on ARC        0.45
+## 15       Avg Life of ARC (estimated)        2.50
+## 16              Annual Return on ARC        0.16</code></pre>
+</div>
+</div>
+<div id="npv-plots" class="section level2">
+<h2>NPV Plots</h2>
+<p><img src="/post/2017-12-12-pacific-insurance-company-structured-xol-2018-20_files/figure-html/euro-1.png" width="672" /></p>
+<div id="disclaimer" class="section level3">
+<h3>Disclaimer</h3>
+<p>The results in this report are strictly private and confidential.</p>
+<p>Developing models to estimate losses is an inherently subjective and imprecise process, involving judgment about a variety of environmental, demographic and regulatory factors. Alternative assumptions and methodologies could yield materially different results. Also, the output of the models depends on data and inputs supplied by others, and any gaps, inaccuracies, or changes to the inputs can substantially affect the output.</p>
+<p>The model output in this report consists of estimates, not predictions. Actual experience may differ materially. There are no guarantees about the reliability, accuracy or completeness of the model output and Huntington Underwriting Limited assumes no liability or responsibility for the content of this report whatsoever.</p>
+<hr />
+<div id="huntington-underwriting-limited-httpwww.huntingtonunderwriting.com" class="section level5">
+<h5>HUNTINGTON UNDERWRITING LIMITED <a href="http://www.huntingtonunderwriting.com" class="uri">http://www.huntingtonunderwriting.com</a></h5>
+<p>Brighton Place, Ground Floor, U0215, Jalan Bahasa, PO Box 80431, 87014 Labuan FT, Malaysia Tel: +60 87 442899</p>
+<p>A Licensed Labuan Underwriting Manager under the Labuan Financial Services &amp; Securities Act 2010 (# US201226)</p>
+</div>
+</div>
+</div>

@@ -1,0 +1,62 @@
+---
+title: Capital Insurance Group Structured XOL 2017-20
+author: AAHE
+date: '2017-09-25'
+slug: capital-insurance-group-xol-2017-20
+categories: []
+tags: []
+---
+
+
+
+<div id="monte-carlo-simulation-in-r" class="section level2">
+<h2>Monte Carlo Simulation in R</h2>
+<div id="preamble" class="section level3">
+<h3>Preamble</h3>
+<p>R is a language and environment for statistical computing and graphics. R provides a wide variety of statistical (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and graphical techniques, and is highly extensible. R is available as Free Software under the terms of the Free Software Foundation’s GNU General Public License in source code form. For more details, please see <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>.</p>
+<p>This analysis makes use of the R package fitdistrplus that provides functions for fitting univariate distributions to different types of data (continuous censored or non-censored data and discrete data) and allowing different estimation methods (maximum likelihood, moment matching, quantile matching and maximum goodness-of-fit estimation). For more details, please see <a href="http://www.jstatsoft.org/v64/i04/" class="uri">http://www.jstatsoft.org/v64/i04/</a>.</p>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown, please see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+</div>
+<div id="deal-structure" class="section level3">
+<h3>Deal Structure</h3>
+<pre class="r"><code>L&lt;-c(1e6,9e6,36e6,72e6)
+GNPI&lt;-c(53.35e6,60e6,66e6)
+r&lt;-c(0.10514,0.35)
+P&lt;-c(GNPI*r[1])
+HUL&lt;-c(0.1,0.2)
+lnorm &lt;- c(1.14,1.5)
+lambda&lt;-c(1.67,0)
+ROE&lt;-3.189300</code></pre>
+</div>
+<div id="monte-carlo-simulation-output" class="section level3">
+<h3>Monte Carlo Simulation Output</h3>
+<pre><code>##  total.premium         agg.loss             NPV          
+##  Min.   : 5912538   Min.   :       0   Min.   :-7570455  
+##  1st Qu.: 7112668   1st Qu.: 2860587   1st Qu.: 1060876  
+##  Median : 8030809   Median : 5025064   Median : 1489960  
+##  Mean   : 8186253   Mean   : 5425827   Mean   : 1032292  
+##  3rd Qu.: 9079037   3rd Qu.: 7535860   3rd Qu.: 1489960  
+##  Max.   :15286254   Max.   :22575487   Max.   : 1489960</code></pre>
+<pre><code>##                                   df         USD
+## 1                        Average NPV  1032292.00
+## 2                      Avg NPV / ERD        7.18
+## 3                        Maximum NPV  1489960.00
+## 4        Average NPV in Profit Cases  1331517.00
+## 5                        Minimum NPV -7570455.00
+## 6                Probability of Loss        0.11
+## 7         Average Loss in Loss Cases -1307153.00
+## 8  Avg Loss in Loss Cases / Avg Prem        0.16
+## 9                     ERD / Avg Prem        0.02
+## 10              99th Percentile Loss -2943754.00
+## 11          99th Percentile Leverage        2.85
+## 12                               ARC  1099623.00
+## 13            Spread on Face Capital        0.01
+## 14               Total Return on ARC        0.94
+## 15       Avg Life of ARC (estimated)        2.50
+## 16              Annual Return on ARC        0.30</code></pre>
+</div>
+</div>
+<div id="npv-plots" class="section level2">
+<h2>NPV Plots</h2>
+<p><img src="/post/2017-09-25-capital-insurance-group-xol-2017-20_files/figure-html/euro-1.png" width="672" /></p>
+</div>
