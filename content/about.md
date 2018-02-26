@@ -2,7 +2,7 @@
 title: "About Us"
 date: "2016-05-05T21:48:51-07:00"
 ---
-Huntington Underwriting Limited (formerly known as AIH Underwriting Limited, “HUL”) is an international (re)insurance Underwriting Manager based in the Labuan International Business and Financial Centre. It is an associate of the Singapore-headquartered insurance services group, Huntington Group Pte Ltd.
+Huntington Underwriting Limited (“HUL”) is an international (re)insurance Underwriting Manager based in the Labuan International Business and Financial Centre. It is an associate of the Singapore-headquartered insurance services group, Huntington Group Pte Ltd.
 
 Incorporated (Company No. LL09214) in the Malaysian Federal Territory of Labuan under the Labuan Companies Act 1990, HUL is licensed (Licence No. US201226) by The Labuan Financial Services Authority as a Labuan Underwriting Manager under the Labuan Financial Services & Securities Act 2010. HUL is also a member of the Labuan International Insurance Association.
 
