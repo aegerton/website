@@ -16,9 +16,6 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     name = "Disclaimer"
     url = "/disclaimer/"
 [[menu.main]]
-    name = "Regulation"
-    url = "/regulation/"
-[[menu.main]]
     name = "Solutions"
     url = "/structured/"
 [[menu.main]]

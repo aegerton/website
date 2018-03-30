@@ -12,4 +12,8 @@ Huntington Underwriting Limited (“HUL”) is an international (re)insurance Un
 
 Incorporated (Company No. LL09214) in the Malaysian Federal Territory of Labuan under the Labuan Companies Act 1990, HUL is licensed (Licence No. US201226) by the [Labuan Financial Services Authority](https://www.labuanibfc.com/about-labuan-ibfc/the-regulator) as a Labuan Underwriting Manager under the Labuan Financial Services & Securities Act 2010. HUL is also a member of the Labuan International Insurance Association.
 
+[Brighton Management Limited](http://www.brighton.asia/) and [Kensington Trust Labuan Limited](https://www.kensington-trust.com/) are the appointed insurance manager and
+Trust Company for HUL, respectively.
+
+
 This website was created using the [**blogdown**](https://github.com/rstudio/blogdown) package. The original theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium-theme).
